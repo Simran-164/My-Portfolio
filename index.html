@@ -1,0 +1,1429 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <meta name="description" content="Simran — AI and Data Science student building machine learning systems, predictive analytics, and interactive data applications.">
+  <title>Simran | AI & Data Science</title>
+
+  <!--
+    DESIGN CONCEPT: THE SIGNAL LAB.
+    An experimental AI research interface built around the journey from raw
+    data to meaningful predictions. A live-feeling signal visualization,
+    terminal-inspired identity, interactive project telemetry, and a custom
+    skill constellation replace the traditional portfolio template.
+    The design reflects Simran's work in data analysis and flood prediction.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d18;
+      --panel: #0d1525;
+      --panel-light: #111d30;
+      --line: rgba(155, 181, 218, .15);
+      --text: #edf4ff;
+      --muted: #8e9db5;
+      --cyan: #65f4db;
+      --blue: #80aaff;
+      --purple: #bd9aff;
+      --mono: "DM Mono", monospace;
+      --sans: "Manrope", sans-serif;
+      --radius: 18px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 80% 4%, rgba(63, 105, 181, .12), transparent 36rem),
+        radial-gradient(ellipse at 10% 42%, rgba(40, 183, 163, .055), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: .15;
+      background-image: radial-gradient(#7186a7 .7px, transparent .7px);
+      background-size: 23px 23px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 5px;
+    }
+
+    ::selection { color: var(--bg); background: var(--cyan); }
+
+    .container { width: min(var(--max), calc(100% - 48px)); margin-inline: auto; }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+    }
+
+    .muted { color: var(--muted); }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 21px;
+      height: 1px;
+      background: var(--cyan);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 35px;
+    }
+
+    .section-heading h2 {
+      margin: 9px 0 0;
+      font-size: clamp(28px, 4vw, 43px);
+      line-height: 1.2;
+      letter-spacing: -.055em;
+    }
+
+    .section-heading p {
+      max-width: 310px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8, 13, 24, .84);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      display: flex;
+      min-height: 72px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      font-size: 17px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      border: 1px solid rgba(101, 244, 219, .45);
+      border-radius: 10px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 14px;
+      background: rgba(101, 244, 219, .055);
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-links a { color: var(--muted); font-size: 12px; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+
+    .nav-cta {
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: border-color .2s, background .2s;
+    }
+
+    .nav-cta:hover { border-color: var(--cyan); background: rgba(101, 244, 219, .06); }
+
+    .hero { padding: 85px 0 72px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.06fr .94fr;
+      gap: 52px;
+      align-items: center;
+    }
+
+    .availability {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      color: #c5d2e5;
+      background: rgba(255,255,255,.018);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(101,244,219,.6);
+    }
+
+    h1 {
+      margin: 25px 0 20px;
+      font-size: clamp(47px, 7vw, 81px);
+      line-height: 1.02;
+      letter-spacing: -.075em;
+      font-weight: 800;
+    }
+
+    h1 .line-two { display: block; color: var(--cyan); }
+
+    .hero-description {
+      max-width: 510px;
+      color: #a6b5ca;
+      font-size: 15px;
+      line-height: 1.95;
+    }
+
+    .hero-description strong { color: var(--text); font-weight: 600; }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 17px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      transition: transform .2s, border-color .2s, background .2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); border-color: var(--cyan); }
+    .btn-primary { color: #06120f; background: var(--cyan); border-color: var(--cyan); }
+    .btn-primary:hover { background: #8bffe9; }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin-top: 35px;
+      padding-top: 21px;
+      border-top: 1px solid var(--line);
+    }
+
+    .hero-meta span { display: block; }
+    .hero-meta .meta-value { font-size: 12px; font-weight: 700; }
+    .hero-meta .meta-label { margin-top: 3px; color: var(--muted); font-family: var(--mono); font-size: 10px; }
+
+    /* Signature element: a simulated model-monitoring instrument. */
+    .instrument {
+      position: relative;
+      padding: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(128,170,255,.22);
+      border-radius: 20px;
+      background:
+        linear-gradient(140deg, rgba(30,51,81,.45), transparent 70%),
+        rgba(13,21,37,.86);
+      box-shadow: 0 25px 80px rgba(0,0,0,.22);
+      isolation: isolate;
+    }
+
+    .instrument::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 230px;
+      height: 230px;
+      top: 15%;
+      right: -110px;
+      border-radius: 50%;
+      background: rgba(101,244,219,.07);
+      filter: blur(35px);
+    }
+
+    .instrument-header, .instrument-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .instrument-title { font-size: 12px; font-weight: 700; }
+    .live-label { color: var(--cyan); display: flex; align-items: center; gap: 7px; }
+
+    .instrument-body {
+      position: relative;
+      margin-top: 20px;
+      padding: 18px 15px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(4,10,20,.55);
+    }
+
+    .chart-label { display: flex; justify-content: space-between; color: var(--muted); font-family: var(--mono); font-size: 10px; }
+    .signal-svg { display: block; width: 100%; height: auto; margin: 12px 0 3px; overflow: visible; }
+
+    .signal-path {
+      stroke-dasharray: 7 8;
+      animation: signal-flow 18s linear infinite;
+    }
+
+    .signal-glow { filter: drop-shadow(0 0 4px rgba(101,244,219,.45)); }
+
+    @keyframes signal-flow { to { stroke-dashoffset: -240; } }
+
+    .instrument-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 12px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,.015);
+    }
+
+    .metric-label { display: block; color: var(--muted); font-family: var(--mono); font-size: 9px; }
+    .metric-value { display: block; margin-top: 5px; font-size: 17px; font-weight: 800; letter-spacing: -.04em; }
+    .metric-value small { color: var(--cyan); font-size: 10px; font-weight: 500; letter-spacing: 0; }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 16px;
+    }
+
+    .pipeline-step {
+      padding: 9px 3px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--muted);
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 9px;
+    }
+
+    .pipeline-step.current {
+      border-color: rgba(101,244,219,.45);
+      color: var(--cyan);
+      background: rgba(101,244,219,.06);
+    }
+
+    .instrument-footer { margin-top: 14px; color: var(--muted); font-size: 10px; }
+    .instrument-footer span:last-child { font-family: var(--mono); }
+
+    .ticker {
+      overflow: hidden;
+      border-block: 1px solid var(--line);
+      background: rgba(255,255,255,.012);
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      gap: 30px;
+      padding: 15px 0;
+      animation: ticker 32s linear infinite;
+    }
+
+    .ticker-item { display: flex; align-items: center; gap: 30px; color: #a9b8ce; font-family: var(--mono); font-size: 10px; white-space: nowrap; }
+    .ticker-item::after { content: "✳"; color: var(--cyan); }
+
+    @keyframes ticker { to { transform: translateX(-50%); } }
+
+    section.content-section { padding: 94px 0; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: .72fr 1.28fr;
+      gap: 65px;
+    }
+
+    .about-index {
+      position: sticky;
+      top: 115px;
+      align-self: start;
+    }
+
+    .about-index .big-index {
+      display: block;
+      margin: 15px 0;
+      color: rgba(101,244,219,.2);
+      font-family: var(--mono);
+      font-size: clamp(65px, 10vw, 112px);
+      letter-spacing: -.1em;
+      line-height: 1;
+    }
+
+    .about-index p { max-width: 240px; color: var(--muted); font-size: 12px; }
+
+    .about-copy h2 {
+      margin: 0 0 20px;
+      font-size: clamp(29px, 4vw, 43px);
+      letter-spacing: -.06em;
+      line-height: 1.25;
+    }
+
+    .about-copy > p { color: #a6b5ca; line-height: 2; }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .principle {
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.015);
+    }
+
+    .principle .symbol { color: var(--cyan); font-family: var(--mono); font-size: 15px; }
+    .principle h3 { margin: 10px 0 4px; font-size: 13px; }
+    .principle p { margin: 0; color: var(--muted); font-size: 11px; }
+
+    .projects-section {
+      border-block: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(15,24,41,.45), rgba(8,13,24,.15));
+    }
+
+    .project-lab {
+      display: grid;
+      grid-template-columns: 225px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .project-selector {
+      display: grid;
+      gap: 9px;
+    }
+
+    .project-tab {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,.012);
+      text-align: left;
+      cursor: pointer;
+      transition: .22s ease;
+    }
+
+    .project-tab:hover { border-color: rgba(101,244,219,.4); color: var(--text); }
+    .project-tab[aria-selected="true"] { border-color: rgba(101,244,219,.55); color: var(--text); background: rgba(101,244,219,.055); }
+
+    .tab-number { display: block; color: var(--cyan); font-family: var(--mono); font-size: 10px; }
+    .tab-name { display: block; margin-top: 7px; font-size: 12px; font-weight: 700; line-height: 1.5; }
+    .tab-type { display: block; margin-top: 5px; color: var(--muted); font-family: var(--mono); font-size: 9px; }
+
+    .project-display {
+      min-width: 0;
+      min-height: 430px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .project-window-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 17px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.015);
+    }
+
+    .window-dots { display: flex; gap: 5px; }
+    .window-dots span { width: 7px; height: 7px; border-radius: 50%; background: #42516a; }
+    .window-label { color: var(--muted); font-family: var(--mono); font-size: 10px; }
+
+    .project-content { padding: clamp(20px, 4vw, 36px); }
+
+    .project-overline {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .project-content h3 {
+      max-width: 600px;
+      margin: 13px 0;
+      font-size: clamp(24px, 4vw, 38px);
+      letter-spacing: -.055em;
+      line-height: 1.25;
+    }
+
+    .project-description { max-width: 620px; color: #a6b5ca; font-size: 13px; line-height: 1.9; }
+
+    .project-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+      margin: 25px 0;
+    }
+
+    .visual-module {
+      min-height: 130px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(4,10,20,.45);
+    }
+
+    .visual-heading { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-family: var(--mono); font-size: 9px; }
+
+    .mini-bars {
+      display: flex;
+      align-items: end;
+      gap: 7px;
+      height: 67px;
+      margin-top: 13px;
+    }
+
+    .mini-bars span {
+      flex: 1;
+      min-width: 3px;
+      height: var(--h);
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(to top, rgba(128,170,255,.22), var(--cyan));
+      opacity: .8;
+      transform-origin: bottom;
+      animation: grow-bar .8s ease both;
+    }
+
+    @keyframes grow-bar { from { transform: scaleY(.1); } to { transform: scaleY(1); } }
+
+    .data-stream {
+      display: grid;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .stream-row { display: flex; align-items: center; gap: 8px; color: #a6b5ca; font-family: var(--mono); font-size: 9px; }
+    .stream-line { height: 4px; flex: 1; border-radius: 10px; background: #23354c; overflow: hidden; }
+    .stream-line span { display: block; height: 100%; width: var(--w); background: var(--blue); border-radius: inherit; }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 19px; }
+    .tag { padding: 5px 9px; border: 1px solid var(--line); border-radius: 6px; color: #b8c7dc; font-family: var(--mono); font-size: 9px; }
+
+    .project-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .project-date { color: var(--muted); font-family: var(--mono); font-size: 10px; }
+
+    .project-panel[hidden] { display: none; }
+
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 55px;
+      align-items: center;
+    }
+
+    .skills-intro h2 {
+      margin: 10px 0 16px;
+      font-size: clamp(31px, 4vw, 45px);
+      letter-spacing: -.06em;
+      line-height: 1.2;
+    }
+
+    .skills-intro p { max-width: 440px; color: var(--muted); line-height: 1.95; }
+
+    .skill-console {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: rgba(13,21,37,.7);
+    }
+
+    .console-top { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: 10px; }
+
+    .skill-group { margin-top: 21px; }
+    .skill-group-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; font-size: 12px; font-weight: 700; }
+    .skill-group-title span:last-child { color: var(--muted); font-family: var(--mono); font-size: 9px; font-weight: 400; }
+
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .skill-chip { padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; color: #bdcbe0; background: rgba(255,255,255,.018); font-family: var(--mono); font-size: 10px; transition: .2s; }
+    .skill-chip:hover { color: var(--cyan); border-color: rgba(101,244,219,.45); transform: translateY(-2px); }
+
+    .experience-section { border-block: 1px solid var(--line); background: rgba(255,255,255,.012); }
+
+    .experience-block {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 35px;
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .experience-date { color: var(--cyan); font-family: var(--mono); font-size: 10px; }
+    .experience-place { display: block; margin-top: 7px; color: var(--muted); font-size: 11px; }
+
+    .experience-detail h3 { margin: 0; font-size: 20px; letter-spacing: -.04em; }
+    .experience-detail .company { margin-top: 4px; color: #aabbd2; font-size: 12px; }
+    .experience-detail p { max-width: 670px; color: var(--muted); line-height: 1.9; }
+
+    .responsibilities { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 15px; }
+
+    .education-strip {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 25px;
+      align-items: center;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(110deg, rgba(128,170,255,.07), rgba(101,244,219,.025));
+    }
+
+    .education-strip h3 { margin: 8px 0 4px; font-size: 19px; letter-spacing: -.04em; }
+    .education-strip p { margin: 0; color: var(--muted); font-size: 12px; }
+    .education-stat { text-align: right; }
+    .education-stat strong { display: block; color: var(--cyan); font-size: 32px; letter-spacing: -.06em; }
+    .education-stat span { color: var(--muted); font-family: var(--mono); font-size: 10px; }
+
+    .certificates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .certificate {
+      display: flex;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .certificate-icon {
+      display: grid;
+      width: 33px;
+      height: 33px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--cyan);
+      background: rgba(101,244,219,.07);
+      font-family: var(--mono);
+    }
+
+    .certificate strong { display: block; font-size: 11px; line-height: 1.6; }
+    .certificate span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+
+    .contact-section { padding: 100px 0 65px !important; }
+
+    .contact-box {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(27px, 6vw, 62px);
+      border: 1px solid rgba(101,244,219,.24);
+      border-radius: 20px;
+      background: linear-gradient(125deg, rgba(19,44,57,.8), rgba(13,21,37,.94) 65%);
+    }
+
+    .contact-box::before {
+      content: "</>";
+      position: absolute;
+      right: 4%;
+      bottom: -70px;
+      color: rgba(101,244,219,.045);
+      font-family: var(--mono);
+      font-size: clamp(140px, 24vw, 280px);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .contact-box h2 {
+      position: relative;
+      max-width: 690px;
+      margin: 12px 0 16px;
+      font-size: clamp(35px, 6vw, 64px);
+      line-height: 1.12;
+      letter-spacing: -.07em;
+    }
+
+    .contact-box > p { position: relative; max-width: 490px; color: #a6b5ca; }
+    .contact-links { position: relative; display: flex; flex-wrap: wrap; gap: 11px; margin-top: 26px; }
+
+    .contact-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .contact-details a { color: #c0cede; font-size: 11px; overflow-wrap: anywhere; }
+    .contact-details a:hover { color: var(--cyan); }
+
+    footer { padding: 23px 0; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 15px; color: var(--muted); font-family: var(--mono); font-size: 10px; }
+    .back-top { color: var(--cyan); }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (min-width: 1400px) { .hero { padding-top: 105px; } }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 38px; }
+      .hero-copy { max-width: 700px; }
+      .instrument { max-width: 650px; width: 100%; margin-inline: auto; }
+      .about-grid { gap: 35px; }
+      .project-lab { grid-template-columns: 180px 1fr; gap: 16px; }
+      .skills-layout { gap: 30px; }
+      .nav-links { gap: 15px; }
+    }
+
+    @media (max-width: 650px) {
+      .container { width: min(100% - 34px, var(--max)); }
+      .nav { min-height: 64px; }
+      .brand { font-size: 15px; }
+      .brand-mark { width: 32px; height: 32px; }
+      .nav-links { gap: 14px; }
+      .nav-links a { font-size: 11px; }
+      .nav-links a:nth-child(1), .nav-links a:nth-child(2), .nav-links a:nth-child(3) { display: none; }
+      .nav-cta { padding: 8px 10px; font-size: 10px; }
+      .hero { padding: 58px 0 48px; }
+      h1 { font-size: clamp(49px, 13vw, 70px); }
+      .hero-description { font-size: 13px; }
+      .hero-meta { gap: 17px; }
+      .hero-meta .meta-value { font-size: 11px; }
+      .instrument { padding: 12px; border-radius: 15px; }
+      .instrument-body { padding: 12px 10px; }
+      .metric { padding: 10px 7px; }
+      .metric-value { font-size: 15px; }
+      .metric-label { font-size: 8px; }
+      section.content-section { padding: 66px 0; }
+      .section-heading { display: block; margin-bottom: 25px; }
+      .section-heading p { margin-top: 12px; }
+      .about-grid { grid-template-columns: 1fr; gap: 20px; }
+      .about-index { position: static; }
+      .about-index .big-index { font-size: 65px; margin: 8px 0; }
+      .about-index p { max-width: none; }
+      .about-copy h2 { font-size: 32px; }
+      .principles { gap: 9px; }
+      .principle { padding: 13px; }
+      .project-lab { grid-template-columns: 1fr; }
+      .project-selector { display: flex; gap: 8px; overflow-x: auto; padding: 0 0 5px; scrollbar-width: thin; }
+      .project-tab { min-width: 150px; flex: 1; padding: 12px; }
+      .project-tab .tab-name { font-size: 11px; }
+      .project-display { min-height: 0; }
+      .project-visual { grid-template-columns: 1fr; }
+      .visual-module { min-height: 115px; }
+      .skills-layout { grid-template-columns: 1fr; gap: 25px; }
+      .experience-block { grid-template-columns: 1fr; gap: 12px; }
+      .education-strip { padding: 18px; }
+      .education-stat strong { font-size: 28px; }
+      .certificates { grid-template-columns: 1fr; }
+      .contact-section { padding: 70px 0 45px !important; }
+      .contact-details { gap: 12px 18px; flex-direction: column; }
+      .footer-inner { align-items: flex-start; flex-direction: column; gap: 7px; }
+    }
+
+    @media (max-width: 360px) {
+      .container { width: calc(100% - 26px); }
+      .hero-actions .btn { width: 100%; }
+      .instrument-metrics { gap: 5px; }
+      .metric-value { font-size: 13px; }
+      .pipeline-step { font-size: 8px; }
+      .principles { grid-template-columns: 1fr; }
+      .project-tab { min-width: 132px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+      .ticker-track { animation: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Simran, home">
+        <span class="brand-mark">S.</span>
+        <span>simran<span style="color:var(--cyan)">.ai</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+      </div>
+
+      <a class="nav-cta" href="#contact">LET'S CONNECT ↗</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="availability mono">
+            <span class="dot" aria-hidden="true"></span>
+            AI & DATA SCIENCE · PRE-FINAL YEAR
+          </div>
+
+          <h1>Turning data<br>into <span class="line-two">direction.</span></h1>
+
+          <p class="hero-description">
+            I'm <strong>Simran</strong>, a Computer Science student focused on
+            <strong>Machine Learning, Data Analysis, and predictive systems.</strong>
+            I build practical projects that transform datasets into useful insights
+            and interactive applications.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projects">Explore my work <span aria-hidden="true">↘</span></a>
+            <a class="btn" href="mailto:simran164g@gmail.com">Contact me <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="hero-meta">
+            <div>
+              <span class="meta-value">B.Tech · CSE</span>
+              <span class="meta-label">EDUCATION</span>
+            </div>
+            <div>
+              <span class="meta-value">8.6 / 10</span>
+              <span class="meta-label">CGPA</span>
+            </div>
+            <div>
+              <span class="meta-value">Python · ML</span>
+              <span class="meta-label">CORE FOCUS</span>
+            </div>
+            <div>
+              <span class="meta-value">Hoshiarpur, Punjab</span>
+              <span class="meta-label">LOCATION</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument" aria-label="Illustrative machine learning and data analysis visualization">
+          <div class="instrument-header">
+            <div>
+              <div class="mono muted">SIGNAL LAB / 001</div>
+              <div class="instrument-title" style="margin-top:5px">Prediction pipeline</div>
+            </div>
+            <span class="live-label mono"><span class="dot"></span> SYSTEM READY</span>
+          </div>
+
+          <div class="instrument-body">
+            <div class="chart-label">
+              <span>DATA SIGNAL</span>
+              <span>ILLUSTRATIVE VIEW</span>
+            </div>
+
+            <svg class="signal-svg" viewBox="0 0 440 170" role="img" aria-label="Decorative signal graph representing data moving through a prediction pipeline">
+              <defs>
+                <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#65f4db" stop-opacity=".22"/>
+                  <stop offset="100%" stop-color="#65f4db" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <g stroke="#28374d" stroke-width="1">
+                <path d="M0 25H440 M0 60H440 M0 95H440 M0 130H440"/>
+                <path d="M40 0V150 M100 0V150 M160 0V150 M220 0V150 M280 0V150 M340 0V150 M400 0V150" stroke-dasharray="2 5"/>
+              </g>
+              <path d="M0 115 L25 106 L45 120 L70 77 L93 88 L115 45 L135 69 L157 56 L180 99 L204 81 L226 105 L250 40 L272 58 L295 31 L316 65 L339 53 L361 82 L384 48 L407 59 L440 23 L440 150 L0 150Z" fill="url(#areaGradient)"/>
+              <path d="M0 115 L25 106 L45 120 L70 77 L93 88 L115 45 L135 69 L157 56 L180 99 L204 81 L226 105 L250 40 L272 58 L295 31 L316 65 L339 53 L361 82 L384 48 L407 59 L440 23" fill="none" stroke="#65f4db" stroke-width="2" stroke-linejoin="round" class="signal-glow"/>
+              <path d="M0 128 C60 118 70 137 120 117 S210 125 265 106 S355 120 440 93" fill="none" stroke="#80aaff" stroke-width="1.5" stroke-dasharray="7 8" class="signal-path"/>
+              <circle cx="295" cy="31" r="4" fill="#65f4db"/>
+              <circle cx="295" cy="31" r="8" fill="none" stroke="#65f4db" stroke-opacity=".45"/>
+              <text x="307" y="23" fill="#65f4db" font-size="9" font-family="DM Mono, monospace">SIGNAL PEAK</text>
+              <text x="0" y="165" fill="#72839c" font-size="9" font-family="DM Mono, monospace">INPUT</text>
+              <text x="390" y="165" fill="#72839c" font-size="9" font-family="DM Mono, monospace">OUTPUT</text>
+            </svg>
+
+            <div class="chart-label">
+              <span>RAW DATA → MODEL</span>
+              <span>INSIGHT → ACTION</span>
+            </div>
+          </div>
+
+          <div class="instrument-metrics">
+            <div class="metric">
+              <span class="metric-label">FOCUS</span>
+              <span class="metric-value">ML <small>01</small></span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">PROCESS</span>
+              <span class="metric-value">EDA <small>02</small></span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">DELIVERY</span>
+              <span class="metric-value">UI <small>03</small></span>
+            </div>
+          </div>
+
+          <div class="pipeline" aria-label="Data workflow">
+            <div class="pipeline-step current">01 / CLEAN</div>
+            <div class="pipeline-step">02 / ANALYZE</div>
+            <div class="pipeline-step">03 / MODEL</div>
+            <div class="pipeline-step">04 / PRESENT</div>
+          </div>
+
+          <div class="instrument-footer">
+            <span>Research mindset. Practical output.</span>
+            <span>PYTHON_BASED</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-label="Technical interests">
+      <div class="ticker-track" aria-hidden="true">
+        <span class="ticker-item">PYTHON</span><span class="ticker-item">MACHINE LEARNING</span>
+        <span class="ticker-item">DATA ANALYSIS</span><span class="ticker-item">PREDICTIVE SYSTEMS</span>
+        <span class="ticker-item">SCIKIT-LEARN</span><span class="ticker-item">STREAMLIT</span>
+        <span class="ticker-item">DATA VISUALIZATION</span><span class="ticker-item">PYTHON</span>
+        <span class="ticker-item">MACHINE LEARNING</span><span class="ticker-item">DATA ANALYSIS</span>
+        <span class="ticker-item">PREDICTIVE SYSTEMS</span><span class="ticker-item">SCIKIT-LEARN</span>
+        <span class="ticker-item">STREAMLIT</span><span class="ticker-item">DATA VISUALIZATION</span>
+      </div>
+    </div>
+
+    <section class="content-section" id="about">
+      <div class="container about-grid">
+        <aside class="about-index reveal">
+          <span class="eyebrow">The researcher</span>
+          <span class="big-index">01—</span>
+          <p>Curiosity starts with a question. Data helps turn it into something measurable.</p>
+        </aside>
+
+        <div class="about-copy reveal">
+          <h2>Building with data.<br>Learning by doing.</h2>
+          <p>
+            I'm pursuing a B.Tech in Computer Science at GNA University, with a focus
+            on AI, Machine Learning, and Data Science. My work brings together
+            Python-based analysis, predictive modelling, and accessible interfaces.
+          </p>
+          <p>
+            Through academic and practical projects, I've worked with real-world
+            datasets, explored patterns in human behaviour, and developed a
+            flood prediction system using Random Forest and API functionality.
+            I enjoy making analytical results easier to understand through
+            clear visualizations and interactive dashboards.
+          </p>
+
+          <div class="principles">
+            <article class="principle">
+              <span class="symbol">⌘ 01</span>
+              <h3>Understand the data</h3>
+              <p>Clean, prepare, explore, and visualize before drawing conclusions.</p>
+            </article>
+            <article class="principle">
+              <span class="symbol">⌁ 02</span>
+              <h3>Build practical models</h3>
+              <p>Apply machine learning to defined prediction problems.</p>
+            </article>
+            <article class="principle">
+              <span class="symbol">▤ 03</span>
+              <h3>Make insights visible</h3>
+              <p>Turn analysis into interactive dashboards and clear outputs.</p>
+            </article>
+            <article class="principle">
+              <span class="symbol">↗ 04</span>
+              <h3>Keep improving</h3>
+              <p>Learn through experiments, projects, and hands-on development.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section projects-section" id="projects">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Selected experiments</span>
+            <h2>Projects in the lab.</h2>
+          </div>
+          <p>Choose a project to inspect its objective, workflow, and technology stack.</p>
+        </div>
+
+        <div class="project-lab reveal">
+          <div class="project-selector" role="tablist" aria-label="Select a portfolio project">
+            <button class="project-tab" type="button" role="tab" id="tab-flood" aria-controls="project-flood" aria-selected="true" tabindex="0" data-project="flood">
+              <span class="tab-number">PROJECT / 01</span>
+              <span class="tab-name">Flood Prediction System</span>
+              <span class="tab-type">MACHINE LEARNING</span>
+            </button>
+
+            <button class="project-tab" type="button" role="tab" id="tab-social" aria-controls="project-social" aria-selected="false" tabindex="-1" data-project="social">
+              <span class="tab-number">PROJECT / 02</span>
+              <span class="tab-name">Social Media vs Productivity</span>
+              <span class="tab-type">DATA ANALYSIS</span>
+            </button>
+          </div>
+
+          <div class="project-display">
+            <div class="project-window-bar">
+              <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <span class="window-label" id="window-filename">flood_prediction / overview</span>
+              <span class="window-label">● LOCAL VIEW</span>
+            </div>
+
+            <article class="project-panel" id="project-flood" role="tabpanel" aria-labelledby="tab-flood" data-panel="flood">
+              <div class="project-content">
+                <span class="project-overline">01 / Predictive modelling</span>
+                <h3>Flood Prediction System</h3>
+                <p class="project-description">
+                  A machine learning project designed to predict flood risk using
+                  environmental datasets. The system combines a Random Forest model,
+                  data preprocessing, API functionality, and a Streamlit interface
+                  to present prediction results and analytical insights.
+                </p>
+
+                <div class="project-visual">
+                  <div class="visual-module">
+                    <div class="visual-heading"><span>MODEL WORKFLOW</span><span>RF</span></div>
+                    <div class="data-stream">
+                      <div class="stream-row"><span>Dataset</span><span class="stream-line"><span style="--w:92%"></span></span></div>
+                      <div class="stream-row"><span>Features</span><span class="stream-line"><span style="--w:74%"></span></span></div>
+                      <div class="stream-row"><span>Model</span><span class="stream-line"><span style="--w:83%"></span></span></div>
+                      <div class="stream-row"><span>Results</span><span class="stream-line"><span style="--w:66%"></span></span></div>
+                    </div>
+                  </div>
+
+                  <div class="visual-module">
+                    <div class="visual-heading"><span>ENVIRONMENTAL DATA</span><span>EDA</span></div>
+                    <div class="mini-bars" aria-label="Decorative sample data bars, not measured results">
+                      <span style="--h:38%"></span><span style="--h:65%"></span>
+                      <span style="--h:48%"></span><span style="--h:83%"></span>
+                      <span style="--h:57%"></span><span style="--h:93%"></span>
+                      <span style="--h:70%"></span><span style="--h:52%"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tag-list" aria-label="Technologies used">
+                  <span class="tag">Python</span><span class="tag">Random Forest</span>
+                  <span class="tag">Scikit-learn</span><span class="tag">Pandas</span>
+                  <span class="tag">NumPy</span><span class="tag">API</span>
+                  <span class="tag">Streamlit</span>
+                </div>
+
+                <div class="project-bottom">
+                  <span class="project-date">APRIL 2026 — MAY 2026</span>
+                  <span class="mono muted">MODEL + INTERACTIVE INTERFACE</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-panel" id="project-social" role="tabpanel" aria-labelledby="tab-social" data-panel="social" hidden>
+              <div class="project-content">
+                <span class="project-overline">02 / Exploratory data analysis</span>
+                <h3>Social Media vs Productivity</h3>
+                <p class="project-description">
+                  A data science project exploring how social media usage relates
+                  to productivity and daily habits. The workflow includes data
+                  cleaning, preprocessing, exploratory analysis, and visual
+                  reporting through an interactive Streamlit dashboard.
+                </p>
+
+                <div class="project-visual">
+                  <div class="visual-module">
+                    <div class="visual-heading"><span>EXPLORATORY ANALYSIS</span><span>EDA</span></div>
+                    <div class="mini-bars" aria-label="Decorative sample data bars, not measured results">
+                      <span style="--h:43%"></span><span style="--h:72%"></span>
+                      <span style="--h:55%"></span><span style="--h:88%"></span>
+                      <span style="--h:62%"></span><span style="--h:47%"></span>
+                      <span style="--h:78%"></span><span style="--h:59%"></span>
+                    </div>
+                  </div>
+
+                  <div class="visual-module">
+                    <div class="visual-heading"><span>ANALYSIS PIPELINE</span><span>DS</span></div>
+                    <div class="data-stream">
+                      <div class="stream-row"><span>Clean</span><span class="stream-line"><span style="--w:90%"></span></span></div>
+                      <div class="stream-row"><span>Explore</span><span class="stream-line"><span style="--w:76%"></span></span></div>
+                      <div class="stream-row"><span>Visualize</span><span class="stream-line"><span style="--w:87%"></span></span></div>
+                      <div class="stream-row"><span>Report</span><span class="stream-line"><span style="--w:69%"></span></span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tag-list" aria-label="Technologies used">
+                  <span class="tag">Python</span><span class="tag">Pandas</span>
+                  <span class="tag">NumPy</span><span class="tag">Matplotlib</span>
+                  <span class="tag">Streamlit</span><span class="tag">Data Visualization</span>
+                </div>
+
+                <div class="project-bottom">
+                  <span class="project-date">JULY 2025 — AUGUST 2025</span>
+                  <span class="mono muted">NO MACHINE LEARNING MODEL</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="skills">
+      <div class="container skills-layout">
+        <div class="skills-intro reveal">
+          <span class="eyebrow">Technical toolkit</span>
+          <h2>The tools behind<br>the thinking.</h2>
+          <p>
+            My toolkit spans Python-based data work, machine learning, visualization,
+            and the development environments used to build and test projects.
+            The focus is on applying tools to real problems rather than collecting labels.
+          </p>
+          <div class="tag-list" style="margin-top:22px">
+            <span class="tag">DATA → PATTERNS</span>
+            <span class="tag">MODELS → PREDICTIONS</span>
+            <span class="tag">INSIGHTS → INTERFACES</span>
+          </div>
+        </div>
+
+        <div class="skill-console reveal">
+          <div class="console-top">
+            <span>skills.config</span>
+            <span>TOOLKIT / 2026</span>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-title"><span>01. Programming & Querying</span><span>FOUNDATIONS</span></div>
+            <div class="skill-chips">
+              <span class="skill-chip">Python</span><span class="skill-chip">SQL</span>
+              <span class="skill-chip">HTML</span><span class="skill-chip">CSS</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-title"><span>02. AI & Data Science</span><span>CORE</span></div>
+            <div class="skill-chips">
+              <span class="skill-chip">Machine Learning</span>
+              <span class="skill-chip">Data Analysis</span>
+              <span class="skill-chip">Data Visualization</span>
+              <span class="skill-chip">Predictive Analysis</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-title"><span>03. Libraries & Applications</span><span>BUILD</span></div>
+            <div class="skill-chips">
+              <span class="skill-chip">Pandas</span><span class="skill-chip">NumPy</span>
+              <span class="skill-chip">Scikit-learn</span><span class="skill-chip">Matplotlib</span>
+              <span class="skill-chip">Streamlit</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-title"><span>04. Development Environment</span><span>WORKFLOW</span></div>
+            <div class="skill-chips">
+              <span class="skill-chip">Git</span><span class="skill-chip">GitHub</span>
+              <span class="skill-chip">Jupyter Notebook</span><span class="skill-chip">VS Code</span>
+              <span class="skill-chip">Google Colab</span><span class="skill-chip">MySQL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section experience-section" id="experience">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Applied learning</span>
+            <h2>From coursework to practice.</h2>
+          </div>
+          <p>Hands-on experience with Python, datasets, predictive models, and interactive dashboards.</p>
+        </div>
+
+        <article class="experience-block reveal">
+          <div>
+            <span class="experience-date">JUL 2025 — AUG 2025</span>
+            <span class="experience-place">Punjab, India</span>
+          </div>
+
+          <div class="experience-detail">
+            <h3>Data Science Trainee</h3>
+            <div class="company">O7 Services</div>
+            <p>
+              Worked on machine learning and data analysis projects using Python
+              and Scikit-learn. Performed preprocessing, visualization, and
+              predictive analysis with Pandas and NumPy, explored real-world
+              datasets, and developed Streamlit interfaces for analytical results.
+            </p>
+
+            <div class="responsibilities">
+              <span class="tag">Machine Learning</span>
+              <span class="tag">Data Preprocessing</span>
+              <span class="tag">Predictive Analysis</span>
+              <span class="tag">Dashboard Development</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section" id="education">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Academic foundation</span>
+            <h2>Learning the science behind the systems.</h2>
+          </div>
+        </div>
+
+        <article class="education-strip reveal">
+          <div>
+            <span class="mono" style="color:var(--cyan)">2023 — 2027</span>
+            <h3>Bachelor of Technology in Computer Science</h3>
+            <p>GNA University · Phagwara, Punjab</p>
+          </div>
+          <div class="education-stat">
+            <strong>8.6</strong>
+            <span>CGPA / 10.0</span>
+          </div>
+        </article>
+
+        <div class="certificates reveal" aria-label="Certifications and workshops">
+          <article class="certificate">
+            <div class="certificate-icon" aria-hidden="true">Py</div>
+            <div>
+              <strong>Python Programming with Data Science</strong>
+              <span>O7 Services · ISO 9001:2015 Certified Training</span>
+            </div>
+          </article>
+
+          <article class="certificate">
+            <div class="certificate-icon" aria-hidden="true">CV</div>
+            <div>
+              <strong>Computer Vision Workshop</strong>
+              <span>ISO-Certified Workshop Program</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section contact-section" id="contact">
+      <div class="container">
+        <div class="contact-box reveal">
+          <span class="eyebrow">Open a connection</span>
+          <h2>Have a problem worth exploring?</h2>
+          <p>
+            I'm interested in connecting around AI, machine learning, data science,
+            and opportunities to keep building practical technical skills.
+            Let's start a conversation.
+          </p>
+
+          <div class="contact-links">
+            <a class="btn btn-primary" href="mailto:simran164g@gmail.com">Email me ↗</a>
+            <a class="btn" href="https://www.linkedin.com/in/simran-6799282a2/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            <a class="btn" href="https://github.com/Simran-164" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
+
+          <div class="contact-details">
+            <a href="mailto:simran164g@gmail.com">simran164g@gmail.com</a>
+            <a href="tel:+919878511164">+91 98785 11164</a>
+            <span class="muted">Hoshiarpur, Punjab, India</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year">2026</span> SIMRAN · BUILT WITH CURIOSITY.</span>
+      <span>DATA IN. INSIGHTS OUT.</span>
+      <a class="back-top" href="#home">BACK TO TOP ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+
+      // Project selector: keyboard accessible tabs with one active panel.
+      const tabs = Array.from(document.querySelectorAll(".project-tab"));
+      const panels = Array.from(document.querySelectorAll(".project-panel"));
+      const filename = document.getElementById("window-filename");
+
+      function activateProject(tab, moveFocus = false) {
+        const selectedProject = tab.dataset.project;
+
+        tabs.forEach((item) => {
+          const selected = item === tab;
+          item.setAttribute("aria-selected", String(selected));
+          item.tabIndex = selected ? 0 : -1;
+        });
+
+        panels.forEach((panel) => {
+          panel.hidden = panel.dataset.panel !== selectedProject;
+        });
+
+        if (filename) {
+          filename.textContent = selectedProject === "flood"
+            ? "flood_prediction / overview"
+            : "social_productivity / overview";
+        }
+
+        if (moveFocus) tab.focus();
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateProject(tab));
+
+        tab.addEventListener("keydown", (event) => {
+          let nextIndex = index;
+
+          if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+            nextIndex = (index + 1) % tabs.length;
+          } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+            nextIndex = (index - 1 + tabs.length) % tabs.length;
+          } else if (event.key === "Home") {
+            nextIndex = 0;
+          } else if (event.key === "End") {
+            nextIndex = tabs.length - 1;
+          } else {
+            return;
+          }
+
+          event.preventDefault();
+          activateProject(tabs[nextIndex], true);
+        });
+      });
+
+      // Reveal content only when motion is allowed and the element enters view.
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const revealItems = document.querySelectorAll(".reveal");
+
+      if ("IntersectionObserver" in window && !reducedMotion.matches) {
+        const observer = new IntersectionObserver((entries, instance) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              instance.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        revealItems.forEach((item) => observer.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add("visible"));
+      }
+
+      // Keep section navigation aligned with the current viewport.
+      const navLinks = Array.from(document.querySelectorAll(".nav-links a"));
+      const sections = navLinks
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      if ("IntersectionObserver" in window) {
+        const sectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach((link) => {
+              const active = link.getAttribute("href") === "#" + entry.target.id;
+              if (active) link.classList.add("active");
+              else link.classList.remove("active");
+            });
+          });
+        }, { rootMargin: "-25% 0px -65% 0px" });
+
+        sections.forEach((section) => sectionObserver.observe(section));
+      }
+    })();
+  </script>
+</body>
+</html>
